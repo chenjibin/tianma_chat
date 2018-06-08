@@ -1,0 +1,150 @@
+<template>
+    <section class="fs-current-page">
+        <aside class="page-aside">
+            <div class="channelswitch-wrap">
+                <div class="panel inservice">
+                    <session-list :list-data="sessionListData" @item-click="_itemClickHandler"></session-list>
+                </div>
+                <div class="panel waitting"></div>
+            </div>
+        </aside>
+        <section class="content">
+            <template v-if="currentSessionId">
+                <div class="left">
+                    <conversation-admin></conversation-admin>
+                    <div class="messagebox-section">
+                        <message-box :chart-data="chartData"></message-box>
+                    </div>
+                    <edit-box></edit-box>
+                </div>
+                <div class="right">
+                    <Tabs :animated="false">
+                        <TabPane label="资料" icon="ios-folder">标签一的内容</TabPane>
+                        <TabPane label="订单" icon="ios-paper">标签二的内容</TabPane>
+                    </Tabs>
+                </div>
+            </template>
+            <div class="content-empty" v-else>
+                <div class="icon-bg">
+                    <Icon type="ios-chatboxes-outline" size="56"></Icon>
+                </div>
+                <span class="text">没有选中会话哦</span>
+            </div>
+        </section>
+    </section>
+</template>
+<style lang="less" scoped>
+    .fs-current-page {
+        flex: 1;
+        display: flex;
+        .page-aside {
+            width: 280px;
+            flex-shrink: 0;
+            position: relative;
+            border-right: 1px solid rgb(229, 229, 229);
+            .channelswitch-wrap {
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                .panel {
+                    height: 100%;
+                    background: rgb(252, 252, 253);
+                    &.waitting {
+                        position: absolute;
+                        left: 280px;
+                        width: 280px;
+                        top: 0;
+                        opacity: 0;
+                        right: 0;
+                        z-index: -1;
+                        transition: left 0.2s, opacity 0.5s;
+                    }
+                }
+            }
+        }
+        .content {
+            display: flex;
+            position: relative;
+            flex: 1 1 0;
+            .left {
+                flex: 1;
+                background-color: #fff;
+                position: relative;
+                .messagebox-section {
+                    position: absolute;
+                    top: 51px;
+                    bottom: 150px;
+                    left: 0;
+                    right: 0;
+                    border-bottom: 1px solid #e5e5e5;
+                    overflow: hidden;
+                }
+            }
+            .right {
+                width: 320px;
+                flex-shrink: 0;
+                border-left: 1px solid #e5e5e5;
+                background-color: #fff;
+                position: relative;
+            }
+            .content-empty {
+                color: rgb(153, 153, 153);
+                text-align: center;
+                height: 154px;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                font-size: 14px;
+                .text {
+                    line-height: 40px;
+                }
+                .icon-bg {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    width: 120px;
+                    height: 120px;
+                    background-color: rgb(248, 248, 248);
+                    margin: auto;
+                    border-radius: 50%;
+                    overflow: hidden;
+                }
+            }
+        }
+    }
+</style>
+<script>
+    import { mapGetters } from 'vuex'
+    import sessionList from '@/baseComponents/session-list'
+    import conversationAdmin from '@/baseComponents/conversation-admin'
+    import messageBox from '@/baseComponents/message-box'
+    import editBox from '@/baseComponents/edit-box'
+    export default {
+        name: 'current',
+        data() {
+            return {
+                sessionListData: [{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {}]
+            }
+        },
+        computed: {
+            ...mapGetters([
+                'currentSessionId',
+                'chartData'
+            ])
+        },
+        methods: {
+            _itemClickHandler(item) {
+                this.$store.commit('setCurrentSessionId', 1)
+            }
+        },
+        components: {
+            sessionList,
+            conversationAdmin,
+            messageBox,
+            editBox
+        }
+    }
+</script>
