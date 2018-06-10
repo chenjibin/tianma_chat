@@ -13,9 +13,9 @@
                 <div class="left">
                     <conversation-admin></conversation-admin>
                     <div class="messagebox-section">
-                        <message-box :chart-data="chartData"></message-box>
+                        <message-box :chart-data="chartData" :to-user-id="currentSessionId"></message-box>
                     </div>
-                    <edit-box></edit-box>
+                    <edit-box :to-user-id="currentSessionId"></edit-box>
                 </div>
                 <div class="right">
                     <Tabs :animated="false">
@@ -137,7 +137,7 @@
         },
         methods: {
             _itemClickHandler(item) {
-                this.$store.commit('setCurrentSessionId', 1)
+                this.$store.commit('setCurrentSessionId', 2)
             }
         },
         components: {

@@ -7,15 +7,14 @@
                 :class="{active: currentIndex === index}"
                 @click.stop="_itemClickHandler(item, index)">
                 <figure class="session-pic">
-                    <img
-                        src="http://thirdwx.qlogo.cn/mmopen/wbKdib81ny68qicYuouHbWJn2UhiazycBuMqOibYHfmENL6C2dwicwU0Mf56iarnsXOQCljxZNFJ5bOVUeYMP2zyqvc2UD9SwXma2G/132"/>
+                    <img src="http://thirdwx.qlogo.cn/mmopen/wbKdib81ny68qicYuouHbWJn2UhiazycBuMqOibYHfmENL6C2dwicwU0Mf56iarnsXOQCljxZNFJ5bOVUeYMP2zyqvc2UD9SwXma2G/132"/>
                 </figure>
                 <span class="badge"><i class="count">1</i></span>
                 <h3 class="desc nick">卍 安 稳 卍  第一大道8b-18 </h3>
                 <pre class="desc">客户查看了: 自定义菜单</pre>
                 <time class="time">09:11</time>
                 <div class="close-session" title="退出接待" @click.stop="_quitSessionHandler" v-if="quitEnable">
-                    <Icon type="ios-close" size="18" color="#999"></Icon>
+                    <Icon type="ios-close" size="18"></Icon>
                 </div>
             </li>
         </ul>
@@ -115,6 +114,10 @@
                     position: absolute;
                     right: 6px;
                     top: 2px;
+                    color: #999;
+                    &:hover {
+                        color: #343f4b;
+                    }
                 }
             }
         }

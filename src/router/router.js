@@ -1,4 +1,4 @@
-import Main from '@/pages/Main.vue';
+import Main from '@/pages/Main.vue'
 // 作为Main组件的子页面展示但是不在左侧菜单显示的路由写在otherRouter里
 export const otherRouter = {
     path: '/',

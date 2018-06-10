@@ -3,18 +3,18 @@
         <div class="message-list-wrap" ref="listWrapper" @scroll="scrollHandler">
             <div class="message-list" ref="messageList">
                 <div class="each-line" v-for="(item, index) in chartData" :key="'line-' + index">
-                    <div class="time-type-block" v-if="item.type === 'time'">{{item.content}}</div>
-                    <div class="out-type-block" v-if="item.type === 'self'">
+                    <!--<div class="time-type-block" v-if="item.type === 'time'">{{item.content}}</div>-->
+                    <div class="out-type-block" v-if="+item.to_user_id !== +meInfo.id">
                         <div class="content-block">
                             <div class="content">{{item.content}}</div>
                         </div>
                         <div class="avatar">
-                            <img :src="item.pic"/>
+                            <img :src="meInfo.avatar"/>
                         </div>
                     </div>
-                    <div class="in-type-block flex-box" v-if="item.type === 'kefu'">
+                    <div class="in-type-block flex-box" v-if="+item.to_user_id === +meInfo.id">
                         <div class="avatar">
-                            <img :src="item.pic"/>
+                            <img :src="item.avatar"/>
                         </div>
                         <div class="content-block flex-one">
                             <div class="content">{{item.content}}</div>
@@ -145,7 +145,8 @@
                 default() {
                     return []
                 }
-            }
+            },
+            toUserId: Number
         },
         data() {
             return {
@@ -154,7 +155,8 @@
         },
         computed: {
             ...mapGetters([
-                'focusType'
+                'focusType',
+                'meInfo'
             ])
         },
         methods: {

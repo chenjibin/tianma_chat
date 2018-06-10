@@ -93,6 +93,9 @@
 </style>
 <script>
     export default {
+        props: {
+            toUserId: Number
+        },
         data() {
             return {
                 messageContent: ''
@@ -111,20 +114,18 @@
             replayMessageHandler() {
                 let vm = this;
                 if (!vm.messageContent) return;
-                let obj = {};
-                let flag = Math.round(Math.random()) === 0;
-                obj.type = 'self';
-                obj.pic = 'http://tm.xyyzi.com:9099/oa/upload/head/1526527828992.png';
-                if (flag) {
-                    obj.type = 'self';
-                    obj.pic = 'http://tm.xyyzi.com:9099/oa/upload/head/1526527828992.png';
-                } else {
-                    obj.type = 'kefu';
-                    obj.pic = 'http://tm.xyyzi.com:9099/oa/upload/head/1520474073654.png';
-                }
-                obj.content = this.messageContent;
+                let obj = {}
+                obj.to_user_id = this.toUserId
+                obj.contentType = 'text'
+                obj.content = vm.messageContent
                 this.$store.commit('addCurrentChartData', obj)
-                this.$ws.send(JSON.stringify(obj))
+                let sendParams = {}
+                sendParams.to_user_id = this.toUserId
+                sendParams.type = 'text'
+                sendParams.content = {
+                    msg: vm.messageContent
+                }
+                vm.$ws.send('index', 'send_message', sendParams)
                 this.messageContent = ''
             }
         },

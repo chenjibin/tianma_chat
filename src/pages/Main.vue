@@ -4,8 +4,9 @@
             <div class="app-sidebar">
                 <div class="top-side">
                     <div class="service-info">
-                        <Avatar icon="person" size="large" />
-                        <p class="status">在线</p>
+                        <Avatar size="large" :src="meInfo.avatar" />
+                        <p class="status">{{meInfo.name}}</p>
+                        <p class="status"><span  class="online"></span>在线</p>
                     </div>
                 </div>
                 <div class="center-side">
@@ -59,6 +60,14 @@
                         .status {
                             margin-top: 8px;
                             color: #fff;
+                            .online {
+                                width: 10px;
+                                height: 10px;
+                                border-radius: 50%;
+                                display: inline-block;
+                                background-color: #19be6b;
+                                margin-right: 6px;
+                            }
                         }
                     }
                 }
@@ -95,7 +104,8 @@
         },
         computed: {
             ...mapGetters([
-                'currentPage'
+                'currentPage',
+                'meInfo'
             ])
         },
         components: {}

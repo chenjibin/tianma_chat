@@ -6,11 +6,11 @@ import {router} from './router/index';
 import store from './store';
 import App from './app.vue';
 import request from './libs/request';
-import ws from './libs/ws'
+import FsSocket from './ws/FsWebsocket'
 
 Vue.use(iView);
 Vue.prototype.$http = request;
-Vue.prototype.$ws = ws;
+Vue.prototype.$ws = new FsSocket('ws://192.168.199.197:9503', '0074be02dcde31e50618fe4793bd6824');
 new Vue({
     el: '#app',
     router,
