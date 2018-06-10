@@ -8,7 +8,6 @@ index.self_info = function (data) {
 }
 index.send_message = function (data) {
     let nowData = data.data
-    console.log(nowData.id, store.state.current.sessionId)
     if (+nowData.id === +store.state.current.sessionId) {
         let obj = {}
         obj.avatar = nowData.avatar
