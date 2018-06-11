@@ -10,8 +10,8 @@
                     <img :src="item.avatar"/>
                 </figure>
                 <h3 class="desc nick">{{item.name}}</h3>
-                <span class="badge"><i class="count">1</i></span>
-                <pre class="desc">客户查看了: 自定义菜单</pre>
+                <span class="badge" v-if="item.unread_num > 0"><i class="count">{{item.unread_num}}</i></span>
+                <pre class="desc">{{item.last_msg ? item.last_msg.content.msg : '暂无消息'}}</pre>
                 <time class="time">09:11</time>
                 <div class="close-session" title="退出接待" @click.stop="_quitSessionHandler" v-if="quitEnable">
                     <Icon type="ios-close" size="18"></Icon>

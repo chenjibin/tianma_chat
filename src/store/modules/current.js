@@ -7,17 +7,27 @@ const current = {
         sessionListData: [],
         sessionId: null,
         chartData: [],
-        page: 1,
+        nowPage: 1,
         totalPage: 1
     },
     getters: {
         sessionListData: state => state.sessionListData,
         currentSessionId: state => state.sessionId,
         chartData: state => state.chartData,
-        page: state => state.page,
+        nowPage: state => state.nowPage,
         totalPage: state => state.totalPage
     },
     actions: {
+        updateSessionList({commit, state}, data) {
+            let sessionList = JSON.parse(JSON.stringify(state.sessionListData))
+            let sessionIndex = sessionList.findIndex(x => +x.id === +data.id)
+            if (sessionIndex > -1) {
+                sessionList = [data, ...sessionList.splice(sessionIndex, 1)]
+            } else {
+                sessionList = [data, ...sessionList]
+            }
+            commit('updateCurrentSessionList', sessionList)
+        },
         changeSession({commit}, data) {
             commit('setCurrentSessionId', +data.id)
             let param = {}
@@ -34,7 +44,10 @@ const current = {
     },
     mutations: {
         plusPage(state) {
-            state.page += 1
+            state.nowPage += 1
+        },
+        updateCurrentSessionList(state, data) { // 更新当前会话列表
+            state.sessionListData = data
         },
         addSessionList(state, data) {
             state.sessionListData = [...state.sessionListData, ...data]

@@ -5,7 +5,7 @@
                 <div class="panel inservice">
                     <session-list
                         :list-data="sessionListData"
-                        :is-show="page > totalPage"
+                        :is-show="nowPage <= totalPage"
                         @item-click="_itemClickHandler"></session-list>
                 </div>
                 <div class="panel waitting"></div>
@@ -136,7 +136,7 @@
                 'currentSessionId',
                 'chartData',
                 'totalPage',
-                'page'
+                'nowPage'
             ])
         },
         methods: {

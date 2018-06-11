@@ -3,6 +3,5 @@
  */
 const error = {}
 error.error = function (message) {
-    console.log(message)
 }
 export default error

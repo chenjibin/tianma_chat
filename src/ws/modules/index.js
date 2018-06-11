@@ -19,12 +19,15 @@ index.get_message = function (data) {
         obj.contentType = nowData.last_msg.type
         obj.content = nowData.last_msg.content.msg
         store.commit('addCurrentChartData', obj)
+    } else {
+        store.dispatch('updateSessionList', nowData)
     }
 }
 
 index.get_friend_list = function (data) {
     let nowData = data.data
+    console.log(nowData)
     store.commit('addSessionList', nowData.list)
-    store.commit('setTotalPage', 1)
+    store.commit('setTotalPage', nowData.paginate.total_page)
 }
 export default index
