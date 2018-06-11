@@ -15,6 +15,9 @@ export default class FsWebsocket {
             }
             this.send('index', 'login', params);
         }
+        this.ws.onerror = (err) => {
+            console.log(err)
+        }
         this.ws.onmessage = (e) => {
             let afterData = JSON.parse(e.data);
             try {

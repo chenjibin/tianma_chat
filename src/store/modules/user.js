@@ -3,7 +3,7 @@
  */
 const user = {
     state: {
-        me: null,
+        me: {},
         others: null
     },
     getters: {

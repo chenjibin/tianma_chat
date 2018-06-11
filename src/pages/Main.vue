@@ -4,7 +4,8 @@
             <div class="app-sidebar">
                 <div class="top-side">
                     <div class="service-info">
-                        <Avatar size="large" :src="meInfo.avatar" />
+                        <Avatar size="large" :src="meInfo.avatar" v-if="meInfo.avatar"/>
+                        <Avatar size="large" icon="person" v-else/>
                         <p class="status">{{meInfo.name}}</p>
                         <p class="status"><span  class="online"></span>在线</p>
                     </div>

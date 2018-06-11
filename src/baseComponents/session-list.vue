@@ -3,14 +3,14 @@
         <ul class="session-list">
             <li class="item"
                 v-for="(item, index) in listData"
-                :key="'session-' + index"
-                :class="{active: currentIndex === index}"
+                :key="'session-' + item.id"
+                :class="{active: currentIndex === +item.id}"
                 @click.stop="_itemClickHandler(item, index)">
                 <figure class="session-pic">
-                    <img src="http://thirdwx.qlogo.cn/mmopen/wbKdib81ny68qicYuouHbWJn2UhiazycBuMqOibYHfmENL6C2dwicwU0Mf56iarnsXOQCljxZNFJ5bOVUeYMP2zyqvc2UD9SwXma2G/132"/>
+                    <img :src="item.avatar"/>
                 </figure>
+                <h3 class="desc nick">{{item.name}}</h3>
                 <span class="badge"><i class="count">1</i></span>
-                <h3 class="desc nick">卍 安 稳 卍  第一大道8b-18 </h3>
                 <pre class="desc">客户查看了: 自定义菜单</pre>
                 <time class="time">09:11</time>
                 <div class="close-session" title="退出接待" @click.stop="_quitSessionHandler" v-if="quitEnable">
@@ -18,7 +18,7 @@
                 </div>
             </li>
         </ul>
-        <div class="load-more">
+        <div class="load-more" v-if="isShow">
             <Button>加载更多</Button>
         </div>
     </div>
@@ -126,6 +126,7 @@
 <script>
     export default {
         props: {
+            isShow: Boolean,
             listData: {
                 type: Array,
                 default() {
@@ -143,8 +144,11 @@
             }
         },
         methods: {
-            _itemClickHandler(item, index) {
-                this.currentIndex = index;
+            _quitSessionHandler() {
+            },
+            _itemClickHandler(item) {
+                if (+this.currentIndex === +item.id) return
+                this.currentIndex = +item.id;
                 this.$emit('item-click', item)
             }
         }

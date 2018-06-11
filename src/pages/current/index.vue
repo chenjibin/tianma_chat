@@ -3,7 +3,10 @@
         <aside class="page-aside">
             <div class="channelswitch-wrap">
                 <div class="panel inservice">
-                    <session-list :list-data="sessionListData" @item-click="_itemClickHandler"></session-list>
+                    <session-list
+                        :list-data="sessionListData"
+                        :is-show="page > totalPage"
+                        @item-click="_itemClickHandler"></session-list>
                 </div>
                 <div class="panel waitting"></div>
             </div>
@@ -117,7 +120,7 @@
     }
 </style>
 <script>
-    import { mapGetters } from 'vuex'
+    import { mapGetters, mapActions } from 'vuex'
     import sessionList from '@/baseComponents/session-list'
     import conversationAdmin from '@/baseComponents/conversation-admin'
     import messageBox from '@/baseComponents/message-box'
@@ -125,19 +128,23 @@
     export default {
         name: 'current',
         data() {
-            return {
-                sessionListData: [{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {},{}, {}, {}]
-            }
+            return {}
         },
         computed: {
             ...mapGetters([
+                'sessionListData',
                 'currentSessionId',
-                'chartData'
+                'chartData',
+                'totalPage',
+                'page'
             ])
         },
         methods: {
+            ...mapActions([
+                'changeSession'
+            ]),
             _itemClickHandler(item) {
-                this.$store.commit('setCurrentSessionId', 2)
+                this.changeSession(item)
             }
         },
         components: {
