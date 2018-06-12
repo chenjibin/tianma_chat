@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "axios": "^0.17.1",
+    "dayjs": "^1.6.7",
     "es6-promise": "^4.2.4",
     "iview": "^2.13.0",
     "js-cookie": "^2.2.0",

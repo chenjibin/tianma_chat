@@ -5,6 +5,7 @@
                 <div class="panel inservice">
                     <session-list
                         :list-data="sessionListData"
+                        :to-user-id="currentSessionId"
                         :is-show="nowPage <= totalPage"
                         @item-click="_itemClickHandler"></session-list>
                 </div>

@@ -18,6 +18,9 @@ export default class FsWebsocket {
         this.ws.onerror = (err) => {
             console.log(err)
         }
+        // setInterval(() => {
+        //     this.send('index', 'test_connect');
+        // }, 30000)
         this.ws.onmessage = (e) => {
             let afterData = JSON.parse(e.data);
             try {
@@ -27,7 +30,7 @@ export default class FsWebsocket {
             }
         }
     }
-    send(module, method, param) {
+    send(module, method, param = {}) {
         let obj = {}
         obj.module = module
         obj.method = method

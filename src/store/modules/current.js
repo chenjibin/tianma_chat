@@ -22,7 +22,8 @@ const current = {
             let sessionList = JSON.parse(JSON.stringify(state.sessionListData))
             let sessionIndex = sessionList.findIndex(x => +x.id === +data.id)
             if (sessionIndex > -1) {
-                sessionList = [data, ...sessionList.splice(sessionIndex, 1)]
+                sessionList.splice(sessionIndex, 1)
+                sessionList = [data, ...sessionList]
             } else {
                 sessionList = [data, ...sessionList]
             }
@@ -30,6 +31,8 @@ const current = {
         },
         changeSession({commit}, data) {
             commit('setCurrentSessionId', +data.id)
+            commit('resetUnreadNumber')
+            commit('clearCurrentChatData')
             let param = {}
             param.to_user_id = data.id
             Vue.prototype.$ws.send('index', 'set_current_session', param)
@@ -58,8 +61,22 @@ const current = {
         setCurrentSessionId(state, id) {
             state.sessionId = id
         },
+        resetUnreadNumber(state) {
+            state.sessionListData.forEach((item) => {
+                if (+item.id === state.sessionId) {
+                    item.unread_num = 0
+                    item.last_msg = []
+                }
+            })
+        },
+        clearCurrentChatData(state) {
+            state.chartData = []
+        },
         addCurrentChartData(state, data) {
             state.chartData = [...state.chartData, data]
+        },
+        updateCurrentChartData(state, data) {
+            state.chartData = [...data, ...state.chartData]
         }
     }
 }

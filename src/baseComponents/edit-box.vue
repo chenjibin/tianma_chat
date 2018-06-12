@@ -1,9 +1,15 @@
 <template>
     <div class="editbox">
         <div class="inputer-actions">
-            <div class="icon-wrap" title="表情">
+            <Poptip placement="top" class="icon-wrap" >
                 <Icon type="happy-outline" size="24" color="#999"></Icon>
-            </div>
+                <div class="api" slot="content">
+                    <fs-qq-face></fs-qq-face>
+                </div>
+            </Poptip>
+            <!--<div class="icon-wrap" title="表情">-->
+                <!--<Icon type="happy-outline" size="24" color="#999"></Icon>-->
+            <!--</div>-->
             <Upload
                 ref="upload"
                 :show-upload-list="false"
@@ -92,6 +98,7 @@
     }
 </style>
 <script>
+    import fsQqFace from './fsQqFace/fsQqFace'
     export default {
         props: {
             toUserId: Number
@@ -129,6 +136,8 @@
                 this.messageContent = ''
             }
         },
-        components: {}
+        components: {
+            fsQqFace
+        }
     }
 </script>

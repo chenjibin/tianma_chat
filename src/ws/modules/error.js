@@ -3,5 +3,7 @@
  */
 const error = {}
 error.error = function (message) {
+    // if (message.message === 'token 失效') window.location.href = 'http://www.qq.com'
+    console.log(message)
 }
 export default error

@@ -161,6 +161,7 @@
         },
         methods: {
             scrollHandler(e) {
+                console.log(e)
             },
             scrollToBottom() {
                 let listDom = this.$refs.listWrapper

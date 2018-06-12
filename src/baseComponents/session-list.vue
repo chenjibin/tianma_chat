@@ -4,15 +4,15 @@
             <li class="item"
                 v-for="(item, index) in listData"
                 :key="'session-' + item.id"
-                :class="{active: currentIndex === +item.id}"
+                :class="{active: toUserId === +item.id}"
                 @click.stop="_itemClickHandler(item, index)">
                 <figure class="session-pic">
                     <img :src="item.avatar"/>
                 </figure>
                 <h3 class="desc nick">{{item.name}}</h3>
                 <span class="badge" v-if="item.unread_num > 0"><i class="count">{{item.unread_num}}</i></span>
-                <pre class="desc">{{item.last_msg ? item.last_msg.content.msg : '暂无消息'}}</pre>
-                <time class="time">09:11</time>
+                <pre class="desc">{{item.last_msg &&  item.last_msg.content ? item.last_msg.content.msg : '暂无消息'}}</pre>
+                <time class="time">{{item.last_msg.addtime | timeHander}}</time>
                 <div class="close-session" title="退出接待" @click.stop="_quitSessionHandler" v-if="quitEnable">
                     <Icon type="ios-close" size="18"></Icon>
                 </div>
@@ -124,8 +124,11 @@
     }
 </style>
 <script>
+    import dayjs from 'dayjs'
+    const nowDate = dayjs().format('YYYY-MM-DD')
     export default {
         props: {
+            toUserId: Number,
             isShow: Boolean,
             listData: {
                 type: Array,
@@ -138,6 +141,13 @@
                 default: true
             }
         },
+        filters: {
+            timeHander(val) {
+                if (!val) return ''
+                if (dayjs(val).format('YYYY-MM-DD') === nowDate) return dayjs(val).format('HH:mm')
+                else return dayjs(val).format('MM:DD')
+            }
+        },
         data() {
             return {
                 currentIndex: null
@@ -147,8 +157,7 @@
             _quitSessionHandler() {
             },
             _itemClickHandler(item) {
-                if (+this.currentIndex === +item.id) return
-                this.currentIndex = +item.id;
+                if (+this.toUserId === +item.id) return
                 this.$emit('item-click', item)
             }
         }
