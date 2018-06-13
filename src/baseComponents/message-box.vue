@@ -1,12 +1,18 @@
 <template>
     <div class="messagebox-wrap">
         <div class="message-list-wrap" ref="listWrapper" @scroll="scrollHandler">
-            <div class="message-list" ref="messageList">
-                <div class="each-line" v-for="(item, index) in chartData" :key="'line-' + index">
+            <Spin size="large" fix v-if="isLoading"></Spin>
+            <div class="message-list" ref="messageList" id="messageList">
+                <div class="each-line" v-for="(item, index) in chartData">
                     <!--<div class="time-type-block" v-if="item.type === 'time'">{{item.content}}</div>-->
                     <div class="out-type-block" v-if="+item.to_user_id !== +meInfo.id">
                         <div class="content-block">
-                            <div class="content">{{item.content}}</div>
+                            <div class="content">
+                                <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
+                                <div class="image-content" v-if="item.contentType === 'image'">
+                                    <img :src="item.url.replace('http://192.168.199.197', '')" @click.stop="prewImg(item.url)"/>
+                                </div>
+                            </div>
                         </div>
                         <div class="avatar">
                             <img :src="meInfo.avatar"/>
@@ -17,12 +23,18 @@
                             <img :src="item.avatar"/>
                         </div>
                         <div class="content-block flex-one">
-                            <div class="content">{{item.content}}</div>
+                            <div class="content">
+                                <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
+                                <div class="image-content" v-if="item.contentType === 'image'">
+                                    <img :src="item.url.replace('http://192.168.199.197', '')"/>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+        <fs-preview-img :prew-open.sync="prewOpen" :img-url="imgUrl"></fs-preview-img>
     </div>
 </template>
 <style lang="less">
@@ -65,6 +77,18 @@
                             border-radius: 6px;
                             text-align: left;
                             word-break: break-all;
+                            font-size: 0;
+                            .image-content {
+                                max-width: 260px;
+                                img {
+                                    max-width: 100%;
+                                    height: auto;
+                                    cursor: zoom-in;
+                                }
+                            }
+                            pre {
+                                font-size: 16px;
+                            }
                             &::after {
                                 content: '';
                                 position: absolute;
@@ -95,6 +119,18 @@
                             background-color: #eee;
                             border-radius: 6px;
                             word-break: break-all;
+                            font-size: 0;
+                            .image-content {
+                                max-width: 260px;
+                                img {
+                                    max-width: 100%;
+                                    height: auto;
+                                    cursor: zoom-in;
+                                }
+                            }
+                            pre {
+                                font-size: 16px;
+                            }
                             &::before {
                                 content: '';
                                 position: absolute;
@@ -135,10 +171,14 @@
     }
 </style>
 <script>
+    import fsPreviewImg from './fs-preview-img'
     import ResizeObserver from 'resize-observer-polyfill'
-    import { mapGetters } from 'vuex'
+    import { mapGetters, mapActions } from 'vuex'
     export default {
         name: 'messageBox',
+        components: {
+            fsPreviewImg
+        },
         props: {
             chartData: {
                 type: Array,
@@ -150,18 +190,31 @@
         },
         data() {
             return {
-                resizeObserverer: null
+                resizeObserverer: null,
+                Emoji: null,
+                prewOpen: false,
+                imgUrl: ''
             }
         },
         computed: {
             ...mapGetters([
                 'focusType',
-                'meInfo'
+                'meInfo',
+                'isLoading'
             ])
         },
         methods: {
+            ...mapActions([
+                'loadMoreChartData'
+            ]),
+            prewImg(url) {
+                this.imgUrl = url
+                this.prewOpen = true
+            },
             scrollHandler(e) {
-                console.log(e)
+                if (e.target.scrollTop <= 0) {
+                    this.loadMoreChartData()
+                }
             },
             scrollToBottom() {
                 let listDom = this.$refs.listWrapper
@@ -184,7 +237,6 @@
                     vm.scrollToBottom()
                 }, 20)
             })
-        },
-        components: {}
+        }
     }
 </script>

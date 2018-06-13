@@ -1,12 +1,12 @@
 <template>
     <div class="editbox">
         <div class="inputer-actions">
-            <Poptip placement="top" class="icon-wrap" >
-                <Icon type="happy-outline" size="24" color="#999"></Icon>
-                <div class="api" slot="content">
-                    <fs-qq-face></fs-qq-face>
-                </div>
-            </Poptip>
+            <!--<Poptip placement="top" class="icon-wrap" >-->
+                <!--<Icon type="happy-outline" size="24" color="#999"></Icon>-->
+                <!--<div class="api" slot="content">-->
+                    <!--<fs-qq-face></fs-qq-face>-->
+                <!--</div>-->
+            <!--</Poptip>-->
             <!--<div class="icon-wrap" title="表情">-->
                 <!--<Icon type="happy-outline" size="24" color="#999"></Icon>-->
             <!--</div>-->
@@ -17,7 +17,7 @@
                 :max-size="2048"
                 accept="image/png, image/jpeg, image/jpg"
                 multiple
-                action="//jsonplaceholder.typicode.com/posts/"
+                action="/weishang/mobile/Webim/imUpload"
                 title="图片"
                 class="icon-wrap">
                 <Icon type="image" size="24" color="#999"></Icon>
@@ -115,17 +115,26 @@
             blurHandler() {
                 this.$store.commit('setFocusType', false)
             },
-            handleSuccess() {
-
+            handleSuccess(file) {
+                if (file.success) {
+                    let sendParams = {}
+                    sendParams.to_user_id = this.toUserId
+                    sendParams.type = 'image'
+                    sendParams.content = {
+                        thumb: file.file.thumb,
+                        url: file.file.url
+                    }
+                    this.$ws.send('index', 'send_message', sendParams)
+                }
             },
             replayMessageHandler() {
                 let vm = this;
                 if (!vm.messageContent) return;
-                let obj = {}
-                obj.to_user_id = this.toUserId
-                obj.contentType = 'text'
-                obj.content = vm.messageContent
-                this.$store.commit('addCurrentChartData', obj)
+                // let obj = {}
+                // obj.to_user_id = this.toUserId
+                // obj.contentType = 'text'
+                // obj.content = vm.messageContent
+                // this.$store.commit('addCurrentChartData', obj)
                 let sendParams = {}
                 sendParams.to_user_id = this.toUserId
                 sendParams.type = 'text'
