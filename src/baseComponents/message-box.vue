@@ -3,34 +3,37 @@
         <div class="message-list-wrap" ref="listWrapper" @scroll="scrollHandler">
             <Spin size="large" fix v-if="isLoading"></Spin>
             <div class="message-list" ref="messageList" id="messageList">
-                <div class="each-line" v-for="(item, index) in chartData">
-                    <!--<div class="time-type-block" v-if="item.type === 'time'">{{item.content}}</div>-->
-                    <div class="out-type-block" v-if="+item.to_user_id !== +meInfo.id">
-                        <div class="content-block">
-                            <div class="content">
-                                <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
-                                <div class="image-content" v-if="item.contentType === 'image'">
-                                    <img :src="item.url.replace('http://192.168.199.197', '')" @click.stop="prewImg(item.url)"/>
+                <div class="no-more-record" v-if="chatDataPage === chatDataTotalPage">没有更多的记录了</div>
+                <div class="each-line" v-for="item in chartData" :key="item.key">
+                    <div class="time-type-block" v-if="item.contentType === 'system-msg-group'">{{item.time}}</div>
+                    <template v-else>
+                        <div class="out-type-block" v-if="+item.to_user_id !== +meInfo.id">
+                            <div class="content-block">
+                                <div class="content">
+                                    <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
+                                    <div class="image-content" v-if="item.contentType === 'image'">
+                                        <img :src="item.url.replace('http://192.168.199.197', '')" @click.stop="prewImg(item.url)"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="avatar">
+                                <img :src="meInfo.avatar"/>
+                            </div>
+                        </div>
+                        <div class="in-type-block flex-box" v-if="+item.to_user_id === +meInfo.id">
+                            <div class="avatar">
+                                <img :src="item.avatar"/>
+                            </div>
+                            <div class="content-block flex-one">
+                                <div class="content">
+                                    <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
+                                    <div class="image-content" v-if="item.contentType === 'image'">
+                                        <img :src="item.url.replace('http://192.168.199.197', '')" @click.stop="prewImg(item.url)"/>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="avatar">
-                            <img :src="meInfo.avatar"/>
-                        </div>
-                    </div>
-                    <div class="in-type-block flex-box" v-if="+item.to_user_id === +meInfo.id">
-                        <div class="avatar">
-                            <img :src="item.avatar"/>
-                        </div>
-                        <div class="content-block flex-one">
-                            <div class="content">
-                                <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
-                                <div class="image-content" v-if="item.contentType === 'image'">
-                                    <img :src="item.url.replace('http://192.168.199.197', '')"/>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    </template>
                 </div>
             </div>
         </div>
@@ -48,6 +51,11 @@
             overflow-y: auto;
             .message-list {
                 padding: 0 12px 20px;
+                .no-more-record {
+                    padding: 16px;
+                    text-align: center;
+                    font-weight: 700;
+                }
                 .each-line {
                     padding: 8px 0;
                     font-size: 14px;
@@ -179,6 +187,11 @@
         components: {
             fsPreviewImg
         },
+        watch: {
+            changeTimes() {
+                this.scrollToBottom()
+            }
+        },
         props: {
             chartData: {
                 type: Array,
@@ -200,7 +213,10 @@
             ...mapGetters([
                 'focusType',
                 'meInfo',
-                'isLoading'
+                'isLoading',
+                'chatDataPage',
+                'chatDataTotalPage',
+                'changeTimes'
             ])
         },
         methods: {
@@ -214,6 +230,7 @@
             scrollHandler(e) {
                 if (e.target.scrollTop <= 0) {
                     this.loadMoreChartData()
+                    e.target.scrollTop = 10
                 }
             },
             scrollToBottom() {
@@ -224,9 +241,9 @@
         created() {
             let vm = this;
             vm.resizeObserverer = new ResizeObserver((entries, observer) => {
-                if (vm.focusType) {
+                // if (vm.focusType) {
                     vm.scrollToBottom()
-                }
+                // }
             })
         },
         mounted() {

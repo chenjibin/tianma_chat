@@ -14,7 +14,6 @@
                 ref="upload"
                 :show-upload-list="false"
                 :on-success="handleSuccess"
-                :max-size="2048"
                 accept="image/png, image/jpeg, image/jpg"
                 multiple
                 action="/weishang/mobile/Webim/imUpload"
@@ -125,6 +124,8 @@
                         url: file.file.url
                     }
                     this.$ws.send('index', 'send_message', sendParams)
+                } else {
+                    this.$Message.error(file.msg)
                 }
             },
             replayMessageHandler() {

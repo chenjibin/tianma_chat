@@ -12,7 +12,8 @@ const current = {
         totalPage: 1,
         canLoadData: false,
         chatDataPage: 1,
-        chatDataTotalPage: 1
+        chatDataTotalPage: 1,
+        changeTimes: 0
     },
     getters: {
         sessionListData: state => state.sessionListData,
@@ -20,7 +21,10 @@ const current = {
         chartData: state => state.chartData,
         nowPage: state => state.nowPage,
         totalPage: state => state.totalPage,
-        isLoading: state => state.isLoading
+        isLoading: state => state.isLoading,
+        chatDataPage: state => state.chatDataPage,
+        chatDataTotalPage: state => state.chatDataTotalPage,
+        changeTimes: state => state.changeTimes
     },
     actions: {
         loadMoreChartData({commit, state}) {
@@ -51,6 +55,7 @@ const current = {
             commit('setChatPage', 1)
             commit('resetUnreadNumber')
             commit('clearCurrentChatData')
+            commit('plusChangeTimes')
             let param = {}
             param.to_user_id = data.id
             param.page = 1
@@ -59,13 +64,16 @@ const current = {
         },
         loadSessionList({commit, state}) {
             let param = {}
-            param.page = state.page
+            param.page = state.nowPage
             param.page_size = 20
             Vue.prototype.$ws.send('index', 'get_friend_list', param)
             commit('plusPage')
         }
     },
     mutations: {
+        plusChangeTimes(state) {
+            state.changeTimes += 1
+        },
         setLoading(state, data) {
             state.isLoading = data
         },
@@ -100,7 +108,7 @@ const current = {
             state.sessionListData.forEach((item) => {
                 if (+item.id === state.sessionId) {
                     item.unread_num = 0
-                    item.last_msg = []
+                    // item.last_msg = []
                 }
             })
         },

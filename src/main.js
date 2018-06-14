@@ -11,7 +11,7 @@ import FsSocket from './ws/FsWebsocket'
 Vue.use(iView);
 Vue.prototype.$http = request;
 
-Vue.prototype.$ws = new FsSocket('ws://192.168.199.197:9503', 'e3fca1cd259e8780e9eeefa4584dc1ff');
+Vue.prototype.$ws = new FsSocket('ws://192.168.199.197:9503', '030d85b2759c6a5a6299dd90a5ce804a');
 new Vue({
     el: '#app',
     router,

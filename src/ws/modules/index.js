@@ -4,6 +4,7 @@
 import store from '../../store'
 import Vue from 'vue'
 import emoji from '../../libs/transEmoji'
+import dayjs from 'dayjs'
 const needTransEmoji = emoji.needTransEmoji()
 const index = {}
 let oneFlag = true
@@ -19,6 +20,7 @@ index.get_message = function (data) {
         obj.avatar = nowData.avatar
         obj.to_user_id = nowData.last_msg.to_user_id
         obj.contentType = nowData.last_msg.type
+        obj.key = 'record-' + dayjs().unix()
         if (obj.contentType === 'text') {
             obj.content = needTransEmoji ? emoji.getNeedContent(nowData.last_msg.content.msg, '/static/emoji/2x/', 20) : nowData.last_msg.content.msg
         } else if (obj.contentType === 'image') {
@@ -56,11 +58,19 @@ index.get_history_msg = function (data) {
         nowData.users[item.user_id] && (obj.avatar = nowData.users[item.user_id].avatar)
         obj.to_user_id = item.to_user_id
         obj.contentType = item.type
-        if (obj.contentType === 'text') {
-            obj.content = needTransEmoji ? emoji.getNeedContent(item.content.msg, '/static/emoji/2x/', 20) : item.content.msg
-        } else if (obj.contentType === 'image') {
-            obj.url = item.content.url
-            obj.thumb = item.content.thumb
+        switch (obj.contentType) {
+            case 'text':
+                obj.content = needTransEmoji ? emoji.getNeedContent(item.content.msg, '/static/emoji/2x/', 20) : item.content.msg
+                obj.key = 'record-' + item.id
+                break
+            case 'image':
+                obj.url = item.content.url
+                obj.thumb = item.content.thumb
+                obj.key = 'record-' + item.id
+                break
+            case 'system-msg-group':
+                obj.time = item.msg
+                obj.key = 'time-' + item.msg
         }
         cacheArr.push(obj)
     })
