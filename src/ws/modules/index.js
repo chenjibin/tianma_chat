@@ -14,6 +14,7 @@ index.self_info = function (data) {
 }
 
 index.get_message = function (data) {
+    store.dispatch('enableScroll')
     let nowData = data.data
     if (+nowData.id === +store.state.current.sessionId || +nowData.id === +store.state.user.me.id) {
         let obj = {}
@@ -53,24 +54,30 @@ index.get_history_msg = function (data) {
     let list = nowData.list
     let cacheArr = []
     store.commit('setChatTotalPage', nowData.paginate.total_page)
-    list.forEach((item) => {
+    list.forEach((item, index) => {
         let obj = {}
         nowData.users[item.user_id] && (obj.avatar = nowData.users[item.user_id].avatar)
         obj.to_user_id = item.to_user_id
         obj.contentType = item.type
+        obj.key = 'record-' + dayjs().unix() + index
         switch (obj.contentType) {
             case 'text':
                 obj.content = needTransEmoji ? emoji.getNeedContent(item.content.msg, '/static/emoji/2x/', 20) : item.content.msg
-                obj.key = 'record-' + item.id
                 break
             case 'image':
                 obj.url = item.content.url
                 obj.thumb = item.content.thumb
-                obj.key = 'record-' + item.id
                 break
             case 'system-msg-group':
                 obj.time = item.msg
-                obj.key = 'time-' + item.msg
+                break
+            case 'item':
+                obj.pic = item.content.pic
+                obj.sale_price = item.content.sale_price
+                obj.sold_quantity = item.content.sold_quantity
+                obj.title = item.content.title
+                obj.url = item.content.url
+                break
         }
         cacheArr.push(obj)
     })

@@ -27,6 +27,7 @@
     }
     pre {
         margin: 0;
+        white-space: pre-wrap;
     }
 
     .gallery-background[lazy=loading] {

@@ -11,8 +11,8 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: { //消炎 'http://192.168.15.22:8080' 孙运超 'http://192.168.17.27:80' 张瑞 'http://192.168.15.169:8080' 胡 'http://192.168.14.51:8081'
-      '/oa': {
-        target: "http://192.168.17.27:80",
+      '/': {
+        target: "http://192.168.199.197:80",
         changeOrigin: true
       }
     },
@@ -55,7 +55,7 @@ module.exports = {
     // Paths
     assetsRoot: path.resolve(__dirname, '../dist'),
     assetsSubDirectory: 'static',
-    assetsPublicPath: '/oa/',
+    assetsPublicPath: '/im/',
 
     /**
      * Source Maps

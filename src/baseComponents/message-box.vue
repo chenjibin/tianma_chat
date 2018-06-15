@@ -10,6 +10,17 @@
                         <div class="out-type-block" v-if="+item.to_user_id !== +meInfo.id">
                             <div class="content-block">
                                 <div class="content">
+                                    <a class="inner-good" v-if="item.contentType === 'item'" :href="item.url">
+                                        <div class="left">
+                                            <img :src="item.pic"/>
+                                        </div>
+                                        <div class="right">
+                                            <p class="title">{{item.title}}</p>
+                                            <div class="bottom">
+                                                <span class="price">{{item.sale_price}}</span>
+                                            </div>
+                                        </div>
+                                    </a>
                                     <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
                                     <div class="image-content" v-if="item.contentType === 'image'">
                                         <img :src="item.url.replace('http://192.168.199.197', '')" @click.stop="prewImg(item.url)"/>
@@ -26,6 +37,17 @@
                             </div>
                             <div class="content-block flex-one">
                                 <div class="content">
+                                    <a class="inner-good flex-box" v-if="item.contentType === 'item'" :href="item.url">
+                                        <div class="left">
+                                            <img :src="item.pic"/>
+                                        </div>
+                                        <div class="right">
+                                            <p class="title">{{item.title}}</p>
+                                            <div class="bottom">
+                                                <span class="price">{{item.sale_price}}</span>
+                                            </div>
+                                        </div>
+                                    </a>
                                     <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
                                     <div class="image-content" v-if="item.contentType === 'image'">
                                         <img :src="item.url.replace('http://192.168.199.197', '')" @click.stop="prewImg(item.url)"/>
@@ -59,6 +81,33 @@
                 .each-line {
                     padding: 8px 0;
                     font-size: 14px;
+                    .inner-good {
+                        display: flex;
+                        padding: 12px 6px;
+                        width: 280px;
+                        background-color: #fff;
+                        text-decoration: none;
+                        color: #666;
+                        .left {
+                            margin-right: 4px;
+                            flex: 0 0 60px;
+                            width: 60px;
+                            img {
+                                max-width: 100%;
+                            }
+                        }
+                        .right {
+                            flex: 1;
+                            .title {
+                                font-size: 14px;
+                            }
+                        }
+                        .bottom {
+                            span {
+                                font-size: 14px;
+                            }
+                        }
+                    }
                     .content-block {
                         min-width: 50px;
                         max-width: 400px;
@@ -187,11 +236,6 @@
         components: {
             fsPreviewImg
         },
-        watch: {
-            changeTimes() {
-                this.scrollToBottom()
-            }
-        },
         props: {
             chartData: {
                 type: Array,
@@ -211,17 +255,18 @@
         },
         computed: {
             ...mapGetters([
-                'focusType',
                 'meInfo',
                 'isLoading',
                 'chatDataPage',
                 'chatDataTotalPage',
-                'changeTimes'
+                'canScroll'
             ])
         },
         methods: {
             ...mapActions([
-                'loadMoreChartData'
+                'loadMoreChartData',
+                'disableScroll',
+                'enableScroll'
             ]),
             prewImg(url) {
                 this.imgUrl = url
@@ -234,16 +279,21 @@
                 }
             },
             scrollToBottom() {
-                let listDom = this.$refs.listWrapper
-                listDom.scrollTop = listDom.scrollHeight
+                this.$nextTick(() => {
+                    setTimeout(() => {
+                        let listDom = this.$refs.listWrapper
+                        listDom.scrollTop = listDom.scrollHeight
+                    }, 60)
+                })
             }
         },
         created() {
             let vm = this;
             vm.resizeObserverer = new ResizeObserver((entries, observer) => {
-                // if (vm.focusType) {
+                if (vm.canScroll) {
                     vm.scrollToBottom()
-                // }
+                    vm.disableScroll()
+                }
             })
         },
         mounted() {

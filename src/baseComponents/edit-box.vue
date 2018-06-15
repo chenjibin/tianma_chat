@@ -16,7 +16,7 @@
                 :on-success="handleSuccess"
                 accept="image/png, image/jpeg, image/jpg"
                 multiple
-                action="/weishang/mobile/Webim/imUpload"
+                :action="uploadUrl"
                 title="图片"
                 class="icon-wrap">
                 <Icon type="image" size="24" color="#999"></Icon>
@@ -26,8 +26,6 @@
             <textarea class="message-textarea"
                       maxlength="500"
                       @keyup.enter="replayMessageHandler"
-                      @focus="focusHandler"
-                      @blur="blurHandler"
                       v-model.trim="messageContent"></textarea>
             <div class="word-counter">
                 <span>{{messageContent.length}}</span>/500
@@ -104,16 +102,11 @@
         },
         data() {
             return {
-                messageContent: ''
+                messageContent: '',
+                uploadUrl: fsGlobalData.uploadUrl
             }
         },
         methods: {
-            focusHandler() {
-                this.$store.commit('setFocusType', true)
-            },
-            blurHandler() {
-                this.$store.commit('setFocusType', false)
-            },
             handleSuccess(file) {
                 if (file.success) {
                     let sendParams = {}
@@ -131,11 +124,6 @@
             replayMessageHandler() {
                 let vm = this;
                 if (!vm.messageContent) return;
-                // let obj = {}
-                // obj.to_user_id = this.toUserId
-                // obj.contentType = 'text'
-                // obj.content = vm.messageContent
-                // this.$store.commit('addCurrentChartData', obj)
                 let sendParams = {}
                 sendParams.to_user_id = this.toUserId
                 sendParams.type = 'text'

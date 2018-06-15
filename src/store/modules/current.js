@@ -13,7 +13,7 @@ const current = {
         canLoadData: false,
         chatDataPage: 1,
         chatDataTotalPage: 1,
-        changeTimes: 0
+        canScroll: true
     },
     getters: {
         sessionListData: state => state.sessionListData,
@@ -24,7 +24,7 @@ const current = {
         isLoading: state => state.isLoading,
         chatDataPage: state => state.chatDataPage,
         chatDataTotalPage: state => state.chatDataTotalPage,
-        changeTimes: state => state.changeTimes
+        canScroll: state => state.canScroll
     },
     actions: {
         loadMoreChartData({commit, state}) {
@@ -50,12 +50,12 @@ const current = {
             }
             commit('updateCurrentSessionList', sessionList)
         },
-        changeSession({commit}, data) {
+        changeSession({commit, dispatch}, data) {
             commit('setCurrentSessionId', +data.id)
             commit('setChatPage', 1)
             commit('resetUnreadNumber')
             commit('clearCurrentChatData')
-            commit('plusChangeTimes')
+            commit('setCanScroll', true)
             let param = {}
             param.to_user_id = data.id
             param.page = 1
@@ -68,14 +68,20 @@ const current = {
             param.page_size = 20
             Vue.prototype.$ws.send('index', 'get_friend_list', param)
             commit('plusPage')
+        },
+        disableScroll({commit}) {
+            commit('setCanScroll', false)
+        },
+        enableScroll({commit}) {
+            commit('setCanScroll', true)
         }
     },
     mutations: {
-        plusChangeTimes(state) {
-            state.changeTimes += 1
-        },
         setLoading(state, data) {
             state.isLoading = data
+        },
+        setCanScroll(state, data) {
+            state.canScroll = data
         },
         setChatPage(state, page) {
             state.chatDataPage = page

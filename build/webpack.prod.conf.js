@@ -114,14 +114,6 @@ const webpackConfig = merge(baseWebpackConfig, {
         from: path.resolve(__dirname, '../static'),
         to: config.build.assetsSubDirectory,
         ignore: ['.*']
-      },
-      {
-        from: 'src/views/main-components/theme-switch/theme',
-        to: config.build.assetsSubDirectory + '/theme',
-      },
-      {
-        from: 'favicon.ico',
-        to: config.build.assetsSubDirectory
       }
     ])
   ]
