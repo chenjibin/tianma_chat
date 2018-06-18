@@ -3,6 +3,7 @@
  */
 import error from './modules/error'
 import index from './modules/index'
+import Vue from 'vue';
 export default class FsWebsocket {
     constructor(url, token = '') {
         this.error = {...error}
@@ -15,12 +16,16 @@ export default class FsWebsocket {
             }
             this.send('index', 'login', params);
         }
-        this.ws.onerror = (err) => {
-            console.log(err)
+        this.ws.onclose = (err) => {
+            Vue.prototype.$Modal.warning({
+                content: err.reason || '失去连接'
+            });
         }
-        // setInterval(() => {
-        //     this.send('index', 'test_connect');
-        // }, 30000)
+        this.ws.onerror = () => {
+            Vue.prototype.$Modal.warning({
+                content: '失去连接'
+            });
+        }
         this.ws.onmessage = (e) => {
             let afterData = JSON.parse(e.data);
             try {

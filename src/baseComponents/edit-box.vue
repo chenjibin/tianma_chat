@@ -2,13 +2,13 @@
     <div class="editbox">
         <div class="inputer-actions">
             <!--<Poptip placement="top" class="icon-wrap" >-->
-                <!--<Icon type="happy-outline" size="24" color="#999"></Icon>-->
-                <!--<div class="api" slot="content">-->
-                    <!--<fs-qq-face></fs-qq-face>-->
-                <!--</div>-->
+            <!--<Icon type="happy-outline" size="24" color="#999"></Icon>-->
+            <!--<div class="api" slot="content">-->
+            <!--<fs-qq-face></fs-qq-face>-->
+            <!--</div>-->
             <!--</Poptip>-->
             <!--<div class="icon-wrap" title="表情">-->
-                <!--<Icon type="happy-outline" size="24" color="#999"></Icon>-->
+            <!--<Icon type="happy-outline" size="24" color="#999"></Icon>-->
             <!--</div>-->
             <Upload
                 ref="upload"
@@ -25,6 +25,7 @@
         <div class="inputer-area">
             <textarea class="message-textarea"
                       maxlength="500"
+                      @paste="tesCHange"
                       @keyup.enter="replayMessageHandler"
                       v-model.trim="messageContent"></textarea>
             <div class="word-counter">
@@ -96,6 +97,7 @@
 </style>
 <script>
     import fsQqFace from './fsQqFace/fsQqFace'
+
     export default {
         props: {
             toUserId: Number
@@ -107,6 +109,51 @@
             }
         },
         methods: {
+            getBody: function(xhr) {
+                let text = xhr.responseText || xhr.response;
+                if (!text) {
+                    return text;
+                }
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    return text;
+                }
+            },
+            postFile: function(file) {
+                let vm = this
+                let xhr = new XMLHttpRequest()
+                let formData = new FormData()
+                formData.append('file', file)
+                xhr.onerror = function error(e) {
+                }
+                xhr.onload = function() {
+                    if (xhr.status < 200 || xhr.status >= 300) {
+                        return new Error('图片发送失败');
+                    }
+                    let chartData = vm.getBody(xhr)
+                    if (chartData.success) {
+                        let sendParams = {};
+                        sendParams.to_user_id = vm.toUserId;
+                        sendParams.type = 'image';
+                        sendParams.content = {
+                            url: chartData.file.url,
+                            thumb: chartData.file.thumb
+                        };
+                        vm.$ws.send('index', 'send_message', sendParams);
+                    } else {
+                        alert(chartData.msg)
+                    }
+                };
+                xhr.withCredentials = false;
+                xhr.open('post', vm.uploadUrl, true);
+                xhr.send(formData)
+            },
+            tesCHange(e) {
+                let clipboardData = e.clipboardData
+                let blob = clipboardData.items[0].getAsFile()
+                this.postFile(blob)
+            },
             handleSuccess(file) {
                 if (file.success) {
                     let sendParams = {}

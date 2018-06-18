@@ -7,54 +7,56 @@
                 <div class="each-line" v-for="item in chartData" :key="item.key">
                     <div class="time-type-block" v-if="item.contentType === 'system-msg-group'">{{item.time}}</div>
                     <template v-else>
-                        <div class="out-type-block" v-if="+item.to_user_id !== +meInfo.id">
+                        <div :class="[+item.to_user_id === +currentSessionId ? 'in-type-block': 'out-type-block']"
+                             class="out-type-block"
+                             v-if="+item.to_user_id !== +currentSessionId">
                             <div class="content-block">
                                 <div class="content">
-                                    <a class="inner-good" v-if="item.contentType === 'item'" :href="item.url">
+                                    <a class="inner-good" v-if="item.contentType === 'item'" :href="item.url" target="_blank">
                                         <div class="left">
                                             <img :src="item.pic"/>
                                         </div>
                                         <div class="right">
                                             <p class="title">{{item.title}}</p>
                                             <div class="bottom">
-                                                <span class="price">{{item.sale_price}}</span>
+                                                <span class="price">¥{{item.sale_price}}</span>
                                             </div>
                                         </div>
                                     </a>
                                     <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
                                     <div class="image-content" v-if="item.contentType === 'image'">
-                                        <img :src="item.url.replace('http://192.168.199.197', '')" @click.stop="prewImg(item.url)"/>
+                                        <img :src="item.thumb" @click.stop="prewImg(item.url)"/>
                                     </div>
                                 </div>
                             </div>
-                            <div class="avatar">
-                                <img :src="meInfo.avatar"/>
-                            </div>
-                        </div>
-                        <div class="in-type-block flex-box" v-if="+item.to_user_id === +meInfo.id">
                             <div class="avatar">
                                 <img :src="item.avatar"/>
                             </div>
-                            <div class="content-block flex-one">
-                                <div class="content">
-                                    <a class="inner-good flex-box" v-if="item.contentType === 'item'" :href="item.url">
-                                        <div class="left">
-                                            <img :src="item.pic"/>
-                                        </div>
-                                        <div class="right">
-                                            <p class="title">{{item.title}}</p>
-                                            <div class="bottom">
-                                                <span class="price">{{item.sale_price}}</span>
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <pre v-html="item.content" v-if="item.contentType === 'text'"></pre>
-                                    <div class="image-content" v-if="item.contentType === 'image'">
-                                        <img :src="item.url.replace('http://192.168.199.197', '')" @click.stop="prewImg(item.url)"/>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
+                        <div class="in-type-block flex-box" v-if="+item.to_user_id === +currentSessionId">
+                            <div class="avatar">
+                                <img :src="item.avatar"/>
+                            </div>
+                            <!--<div class="content-block flex-one">-->
+                                <!--<div class="content">-->
+                                    <!--<a class="inner-good flex-box" v-if="item.contentType === 'item'" :href="item.url" target="_blank">-->
+                                        <!--<div class="left">-->
+                                            <!--<img :src="item.pic"/>-->
+                                        <!--</div>-->
+                                        <!--<div class="right">-->
+                                            <!--<p class="title">{{item.title}}</p>-->
+                                            <!--<div class="bottom">-->
+                                                <!--<span class="price">¥{{item.sale_price}}</span>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</a>-->
+                                    <!--<pre v-html="item.content" v-if="item.contentType === 'text'"></pre>-->
+                                    <!--<div class="image-content" v-if="item.contentType === 'image'">-->
+                                        <!--<img :src="item.thumb" @click.stop="prewImg(item.url)"/>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
                     </template>
                 </div>
             </div>
@@ -84,26 +86,33 @@
                     .inner-good {
                         display: flex;
                         padding: 12px 6px;
-                        width: 280px;
+                        width: 300px;
                         background-color: #fff;
                         text-decoration: none;
                         color: #666;
                         .left {
-                            margin-right: 4px;
-                            flex: 0 0 60px;
-                            width: 60px;
+                            margin-right: 8px;
+                            flex: 0 0 80px;
+                            width: 80px;
                             img {
                                 max-width: 100%;
                             }
                         }
                         .right {
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
                             flex: 1;
                             .title {
+                                height: 42px;
+                                overflow: hidden;
                                 font-size: 14px;
                             }
                         }
                         .bottom {
+                            margin-bottom: 6px;
                             span {
+                                color: #dc0707;
                                 font-size: 14px;
                             }
                         }
@@ -259,7 +268,8 @@
                 'isLoading',
                 'chatDataPage',
                 'chatDataTotalPage',
-                'canScroll'
+                'canScroll',
+                'currentSessionId'
             ])
         },
         methods: {
