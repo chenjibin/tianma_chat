@@ -25,7 +25,7 @@
         <div class="inputer-area">
             <textarea class="message-textarea"
                       maxlength="500"
-                      @paste="tesCHange"
+                      @paste="pasteImgHandler"
                       @keyup.enter="replayMessageHandler"
                       v-model.trim="messageContent"></textarea>
             <div class="word-counter">
@@ -149,10 +149,14 @@
                 xhr.open('post', vm.uploadUrl, true);
                 xhr.send(formData)
             },
-            tesCHange(e) {
+            pasteImgHandler(e) {
                 let clipboardData = e.clipboardData
-                let blob = clipboardData.items[0].getAsFile()
-                this.postFile(blob)
+                if (clipboardData.types[0] === 'Files') {
+                    let blob = clipboardData.items[0].getAsFile()
+                    if (blob.type.match(/^image\//i)) {
+                        this.postFile(blob)
+                    }
+                }
             },
             handleSuccess(file) {
                 if (file.success) {

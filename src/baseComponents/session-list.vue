@@ -20,7 +20,7 @@
             </li>
         </ul>
         <div class="load-more" v-if="isShow">
-            <Button>加载更多</Button>
+            <Button @click="_loadMore">加载更多</Button>
         </div>
     </div>
 </template>
@@ -126,6 +126,7 @@
 </style>
 <script>
     import dayjs from 'dayjs'
+    import { mapActions } from 'vuex'
     const nowDate = dayjs().format('YYYY-MM-DD')
     export default {
         props: {
@@ -146,7 +147,7 @@
             timeHander(val) {
                 if (!val) return ''
                 if (dayjs(val).format('YYYY-MM-DD') === nowDate) return dayjs(val).format('HH:mm')
-                else return dayjs(val).format('MM:DD')
+                else return dayjs(val).format('MM月DD号')
             }
         },
         data() {
@@ -155,6 +156,12 @@
             }
         },
         methods: {
+            ...mapActions([
+                'loadSessionList'
+            ]),
+            _loadMore() {
+                this.loadSessionList()
+            },
             _quitSessionHandler() {
             },
             _itemClickHandler(item) {

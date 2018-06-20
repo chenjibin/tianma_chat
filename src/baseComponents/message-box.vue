@@ -7,9 +7,10 @@
                 <div class="each-line" v-for="item in chartData" :key="item.key">
                     <div class="time-type-block" v-if="item.contentType === 'system-msg-group'">{{item.time}}</div>
                     <template v-else>
-                        <div :class="[+item.to_user_id === +currentSessionId ? 'in-type-block': 'out-type-block']"
-                             class="out-type-block"
-                             v-if="+item.to_user_id !== +currentSessionId">
+                        <div :class="[+item.to_user_id === +currentSessionId ? 'out-type-block': 'in-type-block']">
+                            <div class="avatar" v-if="+item.to_user_id !== +currentSessionId">
+                                <img :src="item.avatar"/>
+                            </div>
                             <div class="content-block">
                                 <div class="content">
                                     <a class="inner-good" v-if="item.contentType === 'item'" :href="item.url" target="_blank">
@@ -29,34 +30,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="avatar">
+                            <div class="avatar" v-if="+item.to_user_id === +currentSessionId">
                                 <img :src="item.avatar"/>
                             </div>
                         </div>
-                        <div class="in-type-block flex-box" v-if="+item.to_user_id === +currentSessionId">
-                            <div class="avatar">
-                                <img :src="item.avatar"/>
-                            </div>
-                            <!--<div class="content-block flex-one">-->
-                                <!--<div class="content">-->
-                                    <!--<a class="inner-good flex-box" v-if="item.contentType === 'item'" :href="item.url" target="_blank">-->
-                                        <!--<div class="left">-->
-                                            <!--<img :src="item.pic"/>-->
-                                        <!--</div>-->
-                                        <!--<div class="right">-->
-                                            <!--<p class="title">{{item.title}}</p>-->
-                                            <!--<div class="bottom">-->
-                                                <!--<span class="price">¥{{item.sale_price}}</span>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</a>-->
-                                    <!--<pre v-html="item.content" v-if="item.contentType === 'text'"></pre>-->
-                                    <!--<div class="image-content" v-if="item.contentType === 'image'">-->
-                                        <!--<img :src="item.thumb" @click.stop="prewImg(item.url)"/>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
                     </template>
                 </div>
             </div>
@@ -87,6 +64,7 @@
                         display: flex;
                         padding: 12px 6px;
                         width: 300px;
+                        height: 104px;
                         background-color: #fff;
                         text-decoration: none;
                         color: #666;

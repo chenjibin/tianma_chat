@@ -6,7 +6,7 @@ const current = {
     state: {
         isLoading: false,
         sessionListData: [],
-        sessionId: null,
+        sessionId: 1,
         chartData: [],
         nowPage: 1,
         totalPage: 1,
@@ -114,7 +114,6 @@ const current = {
             state.sessionListData.forEach((item) => {
                 if (+item.id === state.sessionId) {
                     item.unread_num = 0
-                    // item.last_msg = []
                 }
             })
         },
