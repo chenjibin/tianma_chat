@@ -3,11 +3,13 @@
  */
 import error from './modules/error'
 import index from './modules/index'
+import user from './modules/user'
 import Vue from 'vue';
 export default class FsWebsocket {
     constructor(url, token = '') {
         this.error = {...error}
         this.index = {...index}
+        this.user = {...user}
         this.ws = new WebSocket(url)
         this.ws.onopen = () => {
             console.log('连接成功!')

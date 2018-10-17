@@ -23,8 +23,30 @@
                 </div>
                 <div class="right">
                     <Tabs :animated="false">
-                        <TabPane label="资料" icon="ios-folder">标签一的内容</TabPane>
-                        <TabPane label="订单" icon="ios-paper">标签二的内容</TabPane>
+                        <TabPane label="足迹" icon="ios-paw">
+                            <ul class="foot-print-list">
+                                <li v-for="(item,index) in footPointList" :key="currentSessionId + '' + index">
+                                    <a :href="item.url">
+                                        <img :src="item.pic" />
+                                        <p class="title">{{item.title}}</p>
+                                        <span class="price">{{item.sale_price}}</span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </TabPane>
+                        <TabPane label="订单" icon="ios-paper">
+                            <ul>
+                                <li>
+                                    订单1
+                                </li>
+                                <li>
+                                    订单2
+                                </li>
+                                <li>
+                                    订单3
+                                </li>
+                            </ul>
+                        </TabPane>
                     </Tabs>
                 </div>
             </template>
@@ -38,6 +60,11 @@
     </section>
 </template>
 <style lang="less" scoped>
+    .foot-print-list {
+        img {
+            max-width: 100%;
+        }
+    }
     .fs-current-page {
         flex: 1;
         display: flex;
@@ -137,7 +164,8 @@
                 'currentSessionId',
                 'chartData',
                 'totalPage',
-                'nowPage'
+                'nowPage',
+                'footPointList'
             ])
         },
         methods: {

@@ -13,7 +13,8 @@ const current = {
         canLoadData: false,
         chatDataPage: 1,
         chatDataTotalPage: 1,
-        canScroll: true
+        canScroll: true,
+        footPointList: []
     },
     getters: {
         sessionListData: state => state.sessionListData,
@@ -24,7 +25,8 @@ const current = {
         isLoading: state => state.isLoading,
         chatDataPage: state => state.chatDataPage,
         chatDataTotalPage: state => state.chatDataTotalPage,
-        canScroll: state => state.canScroll
+        canScroll: state => state.canScroll,
+        footPointList: state => state.footPointList
     },
     actions: {
         loadMoreChartData({commit, state}) {
@@ -50,7 +52,14 @@ const current = {
             }
             commit('updateCurrentSessionList', sessionList)
         },
+        getFootPrint({commit}, data) {
+            console.log(data)
+            let param = {}
+            param.user_id = data
+            Vue.prototype.$ws.send('user', 'get_footprint', param)
+        },
         changeSession({commit, dispatch}, data) {
+            dispatch('getFootPrint', +data.id)
             commit('setCurrentSessionId', +data.id)
             commit('setChatPage', 1)
             commit('resetUnreadNumber')
@@ -77,6 +86,9 @@ const current = {
         }
     },
     mutations: {
+        setFootPointList(state, data) {
+            state.footPointList = data
+        },
         setLoading(state, data) {
             state.isLoading = data
         },

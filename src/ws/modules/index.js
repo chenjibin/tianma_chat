@@ -48,6 +48,7 @@ index.get_friend_list = function (data) {
     let nowData = data.data
     if (nowData.current_session && oneFlag) {
         store.commit('setCurrentSessionId', +nowData.current_session)
+        store.dispatch('getFootPrint', +nowData.current_session)
         let param = {}
         param.to_user_id = nowData.current_session
         param.page = 1
