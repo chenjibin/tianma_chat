@@ -6,7 +6,7 @@
                 :key="'session-' + item.id"
                 :class="{active: toUserId === +item.id}"
                 v-if="item.last_msg"
-                @click.stop="_itemClickHandler(item, index)">
+                @click="_itemClickHandler(item, index)">
                 <figure class="session-pic">
                     <img :src="item.avatar"/>
                 </figure>

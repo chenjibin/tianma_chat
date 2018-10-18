@@ -25,12 +25,19 @@
                     <Tabs :animated="false">
                         <TabPane label="足迹" icon="ios-paw">
                             <ul class="foot-print-list">
-                                <li v-for="(item,index) in footPointList" :key="currentSessionId + '' + index">
-                                    <a :href="item.url">
-                                        <img :src="item.pic" />
-                                        <p class="title">{{item.title}}</p>
-                                        <span class="price">{{item.sale_price}}</span>
-                                    </a>
+                                <li v-for="(item,index) in footPointList" :key="currentSessionId + '' + index" class="item">
+                                    <div @click.stop="showDetail(item.url)" class="inner">
+                                        <div class="img-wrap">
+                                            <img :src="item.pic" />
+                                        </div>
+                                        <div class="right-area">
+                                            <p class="title">{{item.title}}</p>
+                                            <div class="">
+                                                <p class="price">￥{{item.sale_price}}</p>
+                                                <p class="price"><span>浏览时间:</span>{{item.review_date}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </li>
                             </ul>
                         </TabPane>
@@ -57,12 +64,73 @@
                 <span class="text">没有选中会话哦</span>
             </div>
         </section>
+        <transition name="slide">
+            <section class="phone-block" v-show="checkShow" v-clickoutside="checkClose">
+                <div class="inner">
+                    <iframe :src="checkUrl" frameborder="0" width="100%" height="100%"></iframe>
+                </div>
+            </section>
+        </transition>
     </section>
 </template>
 <style lang="less" scoped>
+    .slide-enter-active, .slide-leave-active {
+        transition: opacity .5s;
+    }
+    .slide-enter, .slide-leave-to /* .fade-leave-active below version 2.1.8 */ {
+        opacity: 0;
+    }
+    .phone-block {
+        position: fixed;
+        width: 330px;
+        height: 645px;
+        top: 0;
+        right: 320px;
+        background: url(/static/iphone.png) no-repeat center 0;
+        background-size: 100%;
+        .inner {
+            position: absolute;
+            top: 64px;
+            left: 21px;
+            right: 23px;
+            bottom: 22px;
+            overflow: hidden;
+            border-radius: 0 0 35px 35px;
+            border: 1px solid #edf0f4;
+            border-top: none;
+            background-color: #edf0f4;
+            iframe {
+                width: 0;
+                max-width: 100%;
+                min-width: 100%;
+            }
+        }
+    }
     .foot-print-list {
-        img {
-            max-width: 100%;
+        height: calc(~"100vh - 52px");
+        overflow-x: hidden;
+        overflow-y: auto;
+        .item {
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+            .inner {
+                display: flex;
+                .img-wrap {
+                    flex: 0 0 100px;
+                    width: 100px;
+                    font-size: 0;
+                    img {
+                        width: 100%;
+                        height: auto;
+                    }
+                }
+                .right-area {
+                    padding: 4px 8px;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: space-between;
+                }
+            }
         }
     }
     .fs-current-page {
@@ -115,6 +183,8 @@
             }
             .right {
                 width: 320px;
+                height: 100%;
+                overflow: hidden;
                 flex-shrink: 0;
                 border-left: 1px solid #e5e5e5;
                 background-color: #fff;
@@ -153,11 +223,16 @@
     import conversationAdmin from '@/baseComponents/conversation-admin'
     import messageBox from '@/baseComponents/message-box'
     import editBox from '@/baseComponents/edit-box'
+    import clickoutside from '@/directives/click-outside'
     export default {
         name: 'current',
         data() {
-            return {}
+            return {
+                checkUrl: '',
+                checkShow: false
+            }
         },
+        directives: {clickoutside},
         computed: {
             ...mapGetters([
                 'sessionListData',
@@ -172,6 +247,14 @@
             ...mapActions([
                 'changeSession'
             ]),
+            checkClose() {
+                this.checkShow = false;
+                this.checkUrl = '';
+            },
+            showDetail(url) {
+                this.checkUrl = url
+                this.checkShow = true
+            },
             _itemClickHandler(item) {
                 this.changeSession(item)
             }
