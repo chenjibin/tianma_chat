@@ -4,11 +4,13 @@
 const app = {
     state: {
         currentPage: '',
-        focusType: false
+        focusType: false,
+        isHidden: false
     },
     getters: {
         currentPage: state => state.currentPage,
-        focusType: state => state.focusType
+        focusType: state => state.focusType,
+        isHidden: state => state.isHidden
     },
     mutations: {
         setFocusType(state, type) {
@@ -16,6 +18,9 @@ const app = {
         },
         setCurrentPage(state, page) {
             state.currentPage = page
+        },
+        setIsHidden(state, isHidden) {
+            state.isHidden = isHidden
         }
     }
 }

@@ -2,19 +2,19 @@
  * Created by 陈继斌 on 2018/6/10.
  */
 import store from '../../store'
-import Vue from 'vue'
+import vm from '@/main'
 import emoji from '../../libs/transEmoji'
 import dayjs from 'dayjs'
 const needTransEmoji = emoji.needTransEmoji()
 const index = {}
 let oneFlag = true
 index.self_info = function (data) {
-    store.commit('setMeInfo', data.data)
-    store.dispatch('loadSessionList')
+    vm.$store.commit('setMeInfo', data.data)
+    vm.$store.dispatch('loadSessionList')
 }
 
 index.get_message = function (data) {
-    store.dispatch('enableScroll')
+    vm.$store.dispatch('enableScroll')
     let nowData = data.data
     if (+nowData.id === +store.state.current.sessionId || +nowData.id === +store.state.user.me.id) {
         let obj = {}
@@ -38,33 +38,49 @@ index.get_message = function (data) {
                 obj.url = nowData.last_msg.content.url
                 break
         }
-        store.commit('addCurrentChartData', obj)
+        vm.$store.commit('addCurrentChartData', obj)
     } else {
-        store.dispatch('updateSessionList', nowData)
+        vm.$store.dispatch('updateSessionList', nowData)
+        if (store.getters.isHidden) {
+            let returnContent = ''
+            console.log(nowData.last_msg.content.msg)
+            switch (nowData.last_msg.type) {
+                case 'text':
+                    returnContent = nowData.last_msg.content.msg
+                    break
+                case 'image':
+                    returnContent = '图片'
+                    break
+                case 'item':
+                    returnContent = '链接'
+                    break
+            }
+            vm.$notification.showMessage('来新消息啦！', returnContent, nowData.avatar)
+        }
     }
 }
 
 index.get_friend_list = function (data) {
     let nowData = data.data
     if (nowData.current_session && oneFlag) {
-        store.commit('setCurrentSessionId', +nowData.current_session)
-        store.dispatch('getFootPrint', +nowData.current_session)
+        vm.$store.commit('setCurrentSessionId', +nowData.current_session)
+        vm.$store.dispatch('getFootPrint', +nowData.current_session)
         let param = {}
         param.to_user_id = nowData.current_session
         param.page = 1
         param.page_size = 20
-        Vue.prototype.$ws.send('index', 'set_current_session', param)
+        vm.$ws.send('index', 'set_current_session', param)
         oneFlag = false
     }
-    store.commit('addSessionList', nowData.list)
-    store.commit('setTotalPage', nowData.paginate.total_page)
+    vm.$store.commit('addSessionList', nowData.list)
+    vm.$store.commit('setTotalPage', nowData.paginate.total_page)
 }
 
 index.get_history_msg = function (data) {
     let nowData = data.data
     let list = nowData.list
     let cacheArr = []
-    store.commit('setChatTotalPage', nowData.paginate.total_page)
+    vm.$store.commit('setChatTotalPage', nowData.paginate.total_page)
     list.forEach((item, index) => {
         let obj = {}
         obj.to_user_id = item.to_user_id
@@ -92,9 +108,9 @@ index.get_history_msg = function (data) {
         }
         cacheArr.push(obj)
     })
-    store.commit('updateCurrentChartData', cacheArr)
-    store.commit('setToggleLoadFalse')
-    store.commit('setLoading', false)
+    vm.$store.commit('updateCurrentChartData', cacheArr)
+    vm.$store.commit('setToggleLoadFalse')
+    vm.$store.commit('setLoading', false)
 }
 
 index.logout = function () {

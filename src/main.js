@@ -14,12 +14,15 @@ Vue.prototype.$http = request;
 Vue.prototype.$ws = new FsSocket(fsGlobalData.wsUrl, fsGlobalData.token);
 Vue.prototype.$notification = new ShowNotification();
 
-new Vue({
+export default new Vue({
     el: '#app',
     router,
     store,
     render: h => h(App),
     mounted() {
-        this.$notification.showMessage('这是通知标题', '这是通知内容', 'https://www.xyyzi.com/images/home_logo.png')
+        document.addEventListener('visibilitychange', () => {
+            const hidden = document.hidden
+            this.$store.commit('setIsHidden', hidden)
+        })
     }
 });
