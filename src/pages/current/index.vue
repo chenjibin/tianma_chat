@@ -33,7 +33,7 @@
                                         <div class="right-area">
                                             <p class="title">{{item.title}}</p>
                                             <div class="">
-                                                <p class="price">￥{{item.sale_price}}</p>
+                                                <div class=""><span>￥{{item.sale_price}}</span><span class="product-type">{{item.type}}</span></div>
                                                 <p class="price"><span>浏览时间:</span>{{item.review_date}}</p>
                                             </div>
                                         </div>
@@ -82,11 +82,11 @@
     }
     .phone-block {
         position: fixed;
-        width: 330px;
-        height: 645px;
+        width: 400px;
+        height: 790px;
         top: 0;
         right: 320px;
-        background: url(/static/iphone.png) no-repeat center 0;
+        background: url(../../../static/iphone.png) no-repeat center 0;
         background-size: 100%;
         .inner {
             position: absolute;
@@ -110,6 +110,12 @@
         height: calc(~"100vh - 52px");
         overflow-x: hidden;
         overflow-y: auto;
+        .product-type {
+            padding: 2px 4px;
+            border: 1px solid #ff0036;
+            color: #ff0036;
+            margin-left: 6px;
+        }
         .item {
             cursor: pointer;
             border-bottom: 1px solid #ddd;

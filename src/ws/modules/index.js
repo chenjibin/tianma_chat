@@ -41,22 +41,22 @@ index.get_message = function (data) {
         vm.$store.commit('addCurrentChartData', obj)
     } else {
         vm.$store.dispatch('updateSessionList', nowData)
-        if (store.getters.isHidden) {
-            let returnContent = ''
-            console.log(nowData.last_msg.content.msg)
-            switch (nowData.last_msg.type) {
-                case 'text':
-                    returnContent = nowData.last_msg.content.msg
-                    break
-                case 'image':
-                    returnContent = '图片'
-                    break
-                case 'item':
-                    returnContent = '链接'
-                    break
-            }
-            vm.$notification.showMessage('来新消息啦！', returnContent, nowData.avatar)
+    }
+    if (store.getters.isHidden) {
+        let returnContent = ''
+        console.log(nowData.last_msg.content.msg)
+        switch (nowData.last_msg.type) {
+            case 'text':
+                returnContent = nowData.last_msg.content.msg
+                break
+            case 'image':
+                returnContent = '图片'
+                break
+            case 'item':
+                returnContent = '链接'
+                break
         }
+        vm.$notification.showMessage('来新消息啦！', returnContent, nowData.avatar)
     }
 }
 

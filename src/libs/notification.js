@@ -5,6 +5,19 @@ class ShowNotification {
     constructor() {
         this.storeArr = []
         this.maxNotification = 2
+        this.init()
+    }
+    init() {
+        if (Notification) {
+            Notification.requestPermission((result) => {
+                if (result !== 'granted') {
+                    this.showMessage('测试', '测试')
+                }
+            });
+        } else {
+            // 提示不支持系统通知
+            alert('您的浏览器不支持系统通知,建议使用Chrome浏览');
+        }
     }
     showMessage(title, msg, imgUrl) {
         const Notification = window.Notification || window.mozNotification || window.webkitNotification;
